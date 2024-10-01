@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% load cart %} 
+
+  <div class="container mt-2" >
+    <div class="row">
+        <div class="col-lg-3">
+            {% if Catogorys %}
+            {% for Catogory  in Catogorys %}
+            <ul class="list-group py-1">
+                <a class="list-group-item list-group-item-action " href="/dashboard?Catogory={{Catogory.id}}">{{Catogory.name}}</a>
+                
+            </ul>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-lg-9">
+            <div class="row mx-auto ">
+                {% if Products %}
+            {% for Product  in  Products %}
+                <div class="col-md-3 border rounded m-2">
+                    <p class="text-center">{{ Product.created_at|timesince }}</p>
+                    <h3> {{Product.product_name }}
+                       </h3>
+                       <img src="{{Product.image.url}}" class='img-fluid'  >
+                       <p class="text-center pt-3">₹ {{Product.product_price}} </p>
+                       <p>  {{Product.desc}} </p>
+
+                       {{ Product | is_cart:request.session.cart }} 
+                       
+                       {% if Product|is_cart:request.session.cart  %}
+
+                       <p class="text-center"> Already Added In Cart <p/>
+
+                       {% else %}
+                       
+                       <form method="post"  class=" my-2">
+                        {% csrf_token %}
+                        <input type="text" name="product-id" id="" value="{{Product.id}}" class="d-none">
+                         <button type="submit" class="btn btn-outline-dark mt-2">Add To Cart</button>
+                       </form>
+                       {% endif %}
+                </div>
+                {% endfor %}
+            {% endif %}
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+{% endblock  %}

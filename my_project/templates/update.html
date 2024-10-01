@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="text-center">
+          <h1>Update Page</h1>
+          <form id="update-form" method="post" action="{% url 'update' pk=crud_instance.pk %}">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="task">Task:</label>
+              <input type="text" class="form-control" id="task" placeholder="Enter task..." name="update" value="{{ crud_instance.task }}" required>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="is_completes" name="is_completes" {% if crud_instance.is_completes %} checked {% endif %}>
+              <label class="form-check-label" for="is_completes">Completed</label>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Update</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+
+
+
+
+
+
+{% endblock %}

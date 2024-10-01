@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<!--     
+<h1>My Form</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}  
+    <button type="submit">Submit</button>
+</form> -->
+
+<div class="container mt-5">
+    <h1>CRUD Page</h1>
+    <form id="create-form" method="post" action="{% url "home" %}">
+      {% csrf_token %}
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" id="name" placeholder="Enter task..." name="create" required>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Create</button>
+  </form>
+
+    <div class="row pt-4">
+      <!-- Create Form -->
+   
+  <hr>
+      <div class="col-md-6">
+        <h2>Data</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="data-container">
+            {% for crud in cruds %}
+            {% if not crud.is_completes %}
+            <tr>
+                <td> {{crud.task}} </td>
+                <td class="d-flex align-items-center" style="gap: 15px;">
+                 
+                    <form  method="post" action="{% url "delete" crud.pk %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="delete" value="{{ crud.id }}">
+                        <button type="submit" class="btn btn-danger delete-btn" data-id="{{ crud.id }}" >
+                            <i class="fas fa-trash-alt"></i> <!-- Font Awesome delete icon -->
+                          </button>
+                    </form>
+                    
+               
+                    <!-- Update button -->
+                   <a href="{% url "update" crud.pk %}">
+                    <button type="submit" class="btn btn-primary update-btn" data-id="{{ crud.id }}">
+                      <i class="fas fa-edit"></i> <!-- Font Awesome update icon -->
+                    </button>
+                  </a>
+
+                </td>
+              </tr>
+              {% endif  %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-md-6">
+        <h2>Complates Task</h2>
+        {% for crud in completed %}
+            <div class="alert alert-primary" role="alert">
+                {{ crud.task }}
+            </div>
+        
+    {% endfor %}
+      </div>
+    </div>
+    
+  
+    <!-- Display Data -->
+   
+  </div>
+
+
+
+
+  <h1 class="pt-5">Item List</h1>
+  <div class="d-flex" style="gap:15px;"> 
+  {% for item in page_obj %}
+    <ul class=" border">
+            <li>{{ item.name }}</li>
+            <li>{{ item.description }}</li>
+          </ul>
+          {% endfor %}
+        </div>
+
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            
+            <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+            <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
+            <li class="page-item"><a class="page-link" href="?page=3">3</a></li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+
+
+
+              
+      <!-- 
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+  -->
+
+  <div class="container">
+    <div class="row">
+
+      {% if page_obj %}
+      {% for item in page_obj %}
+    
+         
+      <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+          <img src="..." class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{ item.name }}</h5>
+            <p class="card-text">{{ item.description }}</p>
+            <a href="{% url "products" item.id %}" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      
+      <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+          <img src="..." class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+          <img src="..." class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock  %} 

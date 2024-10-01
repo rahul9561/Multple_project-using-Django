@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+
+
+    <div class="container mt-5">
+        <!-- Search Bar and Submit Button -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <form class="d-flex" id="search-form" method="post">
+                    {% csrf_token %}
+                    <input class="form-control me-2" id="search-bar" name="search_bar" type="search" placeholder="Search YouTube Video" aria-label="Search">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- YouTube Thumbnails Grid -->
+        <div class="row row-cols-1 row-cols-md-3 g-4" id="thumbnail-container">
+            <!-- Dynamically generated thumbnails will appear here -->
+            {% if get_id %}
+            {% for get in get_id %}
+            <div class="col" id="video-{{ get.id }}">
+                <div class="card h-100 position-relative">
+                    <a href="https://www.youtube.com/watch?v={{ get.url_name }}" target="_blank">
+                        <img src="https://img.youtube.com/vi/{{ get.url_name }}/hqdefault.jpg" class="card-img-top rounded" alt="Video Thumbnail">
+                    </a>
+                    <form  method="post" style="position: absolute;top: 2px;right: 2px;">
+                        {% csrf_token %}
+                        <input type="text" value="{{ get.id }}" hidden name="delete_meth">
+                        <button type="submit" class="btn delete-button">❌</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No video ID found or invalid URL provided. Please enter a valid YouTube link.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- AJAX and jQuery -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // AJAX for search form submission
+            $('#search-form').on('submit', function(e) {
+                e.preventDefault();  // Prevent form from submitting traditionally
+                
+                $.ajax({
+                    url: '{% url "youtube" %}',  // URL for form submission (Django view)
+                    method: 'POST',
+                    data: {
+                        'search_bar': $('#search-bar').val(),  // Send the search bar value
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    success: function(response) {
+                        // Update the thumbnail container with new data (response will contain updated thumbnails)
+                        $('#thumbnail-container').html(response.thumbnails_html);
+                    },
+                    error: function(response) {
+                        alert('Error: Could not add the video.');
+                    }
+                });
+            });
+
+            
+        });
+    </script>
+
+
+
+
+
+    {% endblock %}

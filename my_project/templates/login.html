@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    /* Optional CSS for styling */
+   
+    .login-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-top: 50px;
+    }
+  </style>
+<div class="container login-container">
+    <h2 class="text-center">Login</h2>
+    {% if error_message %}
+          <div class="alert alert-primary" role="alert">
+            {{error_message}}
+          </div>
+          {% endif %}
+    <form method="post">
+        {% csrf_token %}
+      <div class="form-group">
+        <label for="username">Email</label>
+        <input type="email" class="form-control" id="username" name="email" placeholder="Enter u email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password"  name="password" placeholder="Password"  required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
+    </form>
+  </div>
+
+
+{% endblock  %}

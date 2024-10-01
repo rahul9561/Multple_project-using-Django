@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+{% block  content %}
+
+
+
+
+
+<div class="container mt-5">
+    <h2>Your Cart</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Product ID</th>
+          <th scope="col">Product Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Price</th>
+          <th scope="col">Image</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td> {{product.id}}  </td>
+          <td>{{product.product_name}}</td>
+          <td>{{product.desc}}</td>       
+          <td>₹ {{product.product_price}}</td>
+             <td><img src="{{product.image.url}}" alt="Product 1 Image" class="img-fluid" style="width:90px;"></td>
+        </tr>
+       {% endfor %}
+        <!-- Add more rows for additional products -->
+      </tbody>
+    </table>
+  </div>
+
+{% endblock  %}
